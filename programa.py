@@ -16,7 +16,7 @@ import time
 import io
 import os 
 
-# OPCIONES DE DRIVE
+# driver options
 otps= Options()
 otps.add_argument("user-agent=Mozilla/5.0 (X11; linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko)")
 chrome_options = webdriver.ChromeOptions()
@@ -24,30 +24,30 @@ experimentalFlags = ['calculate-native-win-occlusion@2']
 chromeLocalStatePrefs = { 'browser.enabled_labs_experiments' : experimentalFlags}
 chrome_options.add_experimental_option('localState',chromeLocalStatePrefs)
 
-#Directorio de driver y ingreso a la pagina
+#Driver path and go to the page
 driver_path = 'C:\\Users\\frigh\\OneDrive\\Escritorio\\python\\chromedriver.exe'
 otps.add_argument('--no-sandbox')
 driver = webdriver.Chrome(driver_path)
 driver.get('https://twitter.com/home')
 
-#localiza el inicio
+#localize inputs //ignore
 input_user =WebDriverWait(driver, 15).until(
 (EC.presence_of_element_located((By.XPATH, "//input[@name='session[username_or_email]' and @dir='auto']")))
 )
 input_pass = driver.find_element(By.XPATH, '//input[@name="session[password]"]')
 
-#manda las clave y logea
+#send the keys and login
 nombre= ""
-#usuario
+#user
 input_user.send_keys(nombre)
 password = ""
-#contraseña
+#password
 input_pass.send_keys(password)
 boton = driver.find_element(By.XPATH, '//main//div[@data-testid="LoginForm_Login_Button"]//div[@dir="auto"]')
 boton.click()
 
 
-#si no existe la cuenta o existe pero no pudo localizarla correctamente
+#if doesnt exist the account or exits but there was a problem 
 def existeerror():
     try:
         bloque = WebDriverWait(driver, 1).until(
@@ -59,7 +59,7 @@ def existeerror():
         pop3 = nombre
         bloqueadas.append(pop3)
         print (len(bloqueadas))
-#otro metodo de confirmacion si existe
+#another confirmation method or if it exists
 def noexiste1():
     try:
         bloque = WebDriverWait(driver, 4).until(
@@ -71,12 +71,12 @@ def noexiste1():
         print (len(noexiste))
     except:
         print ("existe")
-#se dirige a la seccion de Personas en twitter
+#go to the "people" Secction
 def peton():
     people = WebDriverWait(driver, 8).until(
     (EC.presence_of_element_located((By.XPATH, '//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div/div/div[1]/div[2]/nav/div/div[2]/div/div[3]/a')))
     ).click()
-#clickea la cuenta
+#click on the account
 def buscar():
     try:
         peton()
@@ -87,7 +87,7 @@ def buscar():
         people = WebDriverWait(driver, 8).until(
         (EC.presence_of_element_located((By.XPATH, '//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div/div/div[1]/div[2]/nav/div/div[2]/div/div[3]/a')))
         ).click()
-#si esta privada la saltea
+#if the account is private skip
 def bloqued():  
     try:
         bloque = WebDriverWait(driver, 4).until(
@@ -99,7 +99,7 @@ def bloqued():
         print (len(priv))
     except:
         print ("no esta priv")
-#primer analisis
+#first analysis
 def analisis1():
     try:
         seguidores = WebDriverWait(driver, 5).until(
@@ -130,7 +130,7 @@ def analisis1():
             print (len(nosirven))
     except:
         print ("No encontre :C")
-#segundo analisis
+#second analysis
 def analisis2():
     try:
         seguidos = driver.find_element(By.XPATH, '//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div/div/div[2]/div/div/div[1]/div/div[5]/div[1]/a/span[1]/span')
@@ -161,7 +161,7 @@ def analisis2():
     except:
         print ("------------------------")
 
-#definimos las listas
+#variable list and dictionary
 archivo = open('cuentas.txt')
 main = {}
 sirven = []
@@ -175,7 +175,7 @@ priv = []
 nosirven = []
 noexiste = []
 nombre = archivo.readline()
-#leemos cada cuenta en el archivo
+#read the accounts in the file 
 for nombre in archivo:
     try:
         driver.get("https://twitter.com/explore")
@@ -203,7 +203,7 @@ for nombre in archivo:
 with open("facu.txt", "w", encoding='utf-8') as output_file:
     output_file.write(str(main))
 
-#escribe los datos guardados en los correspondiente
+#write information in files.txt
 archivo.close()
 archivo2 = open('nosirven.txt')
 with open("nosirven.txt", "w", encoding='utf-8') as output_file:
